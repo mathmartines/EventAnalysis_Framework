@@ -25,7 +25,7 @@ def construct_eft_term_names(term: str, indices: str):
 
 
 if __name__ == "__main__":
-    path_to_folder = "/home/martines/work/MG5_aMC_v3_1_1/PhD/STXS/WH/lhe_files"
+    path_to_folder = "/home/martines/work/MG5_aMC_v3_1_1/PhD/STXS/ZH/lhe_files"
 
     eft_terms = [
         "C3Hq", "C3Hq-C3Hq"
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     )
 
     # Constructs the event analysis
-    event_analysis = EventAnalysis(cuts=[higgs_rapidity_cut])  # no cuts being applied
+    event_analysis = EventAnalysis(cuts=[])  # no cuts being applied
 
     # Performs the loop over the events
     event_loop = EventLoop(file_reader=pylhe.read_lhe, histogram=trans_momentum_v)
@@ -69,6 +69,6 @@ if __name__ == "__main__":
                 print(current_hist, xsection)
 
     # Saves the json file
-    with open(f"{path_to_folder}/STXS_WH.json", "w") as file_:
-        eft_hists = {term: dist.tolist() for term, dist in eft_hists.items()}
-        json.dump(eft_hists, file_, indent=4)
+    # with open(f"{path_to_folder}/STXS_ZH.json", "w") as file_:
+    #     eft_hists = {term: dist.tolist() for term, dist in eft_hists.items()}
+    #     json.dump(eft_hists, file_, indent=4)
