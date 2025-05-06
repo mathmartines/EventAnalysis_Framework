@@ -4,18 +4,17 @@ from EventAnalysis_Framework.src.Histogram import ObservableHistogram
 from EventAnalysis_Framework.src.Analysis import EventAnalysis, EventLoop
 from EventAnalysis_Framework.src.Utilities import read_xsection
 from EventAnalysis_Framework.LHE.analysis.TGC.ATLAS_1902_05759 import fiducial_phase_space
+import json
 import pylhe
 import copy
 
 
 if __name__ == "__main__":
     # Path to the folder where the .lhe files are stored
-    folderpath = "/home/martines/work/MG5_aMC_v2_9_23/PhD/TGC/WZ/ATLAS_1902_05759/lhe_files"
+    folderpath = "/home/martines/work/MG5_aMC_v2_9_23/PhD/TGC/WZ/ATLAS_1902_05759_no_jets/lhe_files"
 
     # Effective terms we need to run the analysis on
-    eft_terms = [
-        "SM"
-    ]
+    eft_terms = ["CHud11", "CHud12", "CHud11-CHud11", "CHud12-CHud12"]
 
     # Histogram for the analysis
     bin_edges = [0, 140, 180, 250, 450, 600, 100000000000]
@@ -51,4 +50,7 @@ if __name__ == "__main__":
             histograms_efts[eft_term] += (xsection * 1000 / number_of_evts) * current_hist
             print(current_hist, xsection)
 
-    print(histograms_efts["SM"])
+    # Saves results
+    with open(f"{folderpath}/ATLAS_WZ_dsig_dmTWZ_SMEFTd6HiggsCurrentOperators.json", "w") as file_:
+        simuations = {term: dist.tolist() for term, dist in histograms_efts.items()}
+        json.dump(simuations, file_, indent=4)

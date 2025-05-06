@@ -13,38 +13,24 @@ def invariant_mass_wz(event):
     """Computes the invariant mass of the event."""
     leptons = evaluate_total_momentum(event, [11, 13])
 
-    neutrinos = np.array([
-        [getattr(part, comp) for comp in "e px py pz".split()]
-        for part in event.particles if abs(part.id) in [12, 14]
-    ])
-
-    for index, momentum in enumerate(neutrinos):
-        transv_momentum = np.sqrt(np.power(momentum[1], 2) + np.power(momentum[2], 2))
-        neutrinos[index][0] = transv_momentum
-        neutrinos[index][-1] = 0
-
-    total_neutrinos = np.sum(neutrinos, axis=0)
-
-    total_momentum = leptons + total_neutrinos
-
     # Invariant mass
     invariant_mass_squared = np.sum(
-        [(1 if index == 0 else -1) * np.power(value, 2) for index, value in enumerate(total_momentum)]
+        [(1 if index == 0 else -1) * np.power(value, 2) for index, value in enumerate(leptons)]
     )
     return np.sqrt(invariant_mass_squared)
 
 
 if __name__ == "__main__":
     # Path to the folder where the .lhe files are stored
-    folderpath = "/home/martines/work/MG5_aMC_v3_1_1/PhD/TGC/WZ/CMS_2110_11231_no_jets/lhe_files"
+    folderpath = "/home/martines/work/MG5_aMC_v2_9_23/PhD/TGC/WW/CMS_2009_00119-CC/lhe_files"
 
     # Effective terms we need to run the analysis on
     eft_terms = [
-        "SM"
+        "CLHud21-CLHud21"
     ]
 
     # Histogram for the analysis
-    bin_edges = [100, 160, 200, 300, 600, 3000, 1000000000]
+    bin_edges = [0, 100, 200, 300, 400, 500, 600, 700, 800, 1000, 10000000000]
     mll_hist = ObservableHistogram(
         bin_edges=bin_edges, observable=invariant_mass_wz
     )
@@ -65,7 +51,7 @@ if __name__ == "__main__":
     # Iterates over the terms we need to run the analysis
     for eft_term in eft_terms:
         # Iterates over the simulated bins
-        for bin_index in range(1, 7):
+        for bin_index in range(1, 11):
             # name of the .lhe file
             file_name = f"{folderpath}/{eft_term}-bin-{bin_index}.lhe"
             # Cross-section
