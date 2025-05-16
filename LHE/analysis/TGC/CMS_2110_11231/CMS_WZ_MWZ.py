@@ -4,6 +4,7 @@ from EventAnalysis_Framework.src.Histogram import ObservableHistogram, Histogram
 from EventAnalysis_Framework.src.Analysis import EventAnalysis, EventLoop
 from EventAnalysis_Framework.LHE.analysis.TGC.CMS_2110_11231 import total_phase_space
 from EventAnalysis_Framework.src.Utilities import read_xsection
+from EventAnalysis_Framework.LHE.src.Observables import InvariantMassObs
 import pylhe
 import json
 import copy
@@ -15,80 +16,17 @@ if __name__ == "__main__":
 
     # Effective terms we need to run the analysis on
     eft_terms = [
-        "SM",
-        # C1Hq
-        "C1Hq11",
-        "C1Hq12",
-        "C1Hq13",
-        "C1Hq22",
-        "C1Hq23",
-        "C1Hq33",
-        "C1Hq11-C1Hq11",
-        "C1Hq12-C1Hq12",
-        "C1Hq13-C1Hq13",
-        "C1Hq22-C1Hq22",
-        "C1Hq23-C1Hq23",
-        "C1Hq33-C1Hq33",
-        # C3Hq
-        "C3Hq11",
-        "C3Hq12",
-        "C3Hq13",
-        "C3Hq22",
-        "C3Hq23",
-        "C3Hq33",
-        "C3Hq11-C3Hq11",
-        "C3Hq12-C3Hq12",
-        "C3Hq13-C3Hq13",
-        "C3Hq22-C3Hq22",
-        "C3Hq23-C3Hq23",
-        "C3Hq33-C3Hq33",
-        # CHd
-        "CHd11",
-        "CHd12",
-        "CHd13",
-        "CHd22",
-        "CHd23",
-        "CHd33",
-        "CHd11-CHd11",
-        "CHd12-CHd12",
-        "CHd13-CHd13",
-        "CHd22-CHd22",
-        "CHd23-CHd23",
-        "CHd33-CHd33",
-        # CHu
-        "CHu11",
-        "CHu12",
-        "CHu13",
-        "CHu22",
-        "CHu23",
-        "CHu11-CHu11",
-        "CHu12-CHu12",
-        "CHu13-CHu13",
-        "CHu22-CHu22",
-        "CHu23-CHu23",
-        # CHud
-        "CHud11",
-        "CHud12",
-        "CHud13",
-        "CHud21",
-        "CHud22",
-        "CHud23",
-        "CHud11-CHud11",
-        "CHud12-CHud12",
-        "CHud13-CHud13",
-        "CHud21-CHud21",
-        "CHud22-CHud22",
-        "CHud23-CHud23"
+        "SM", "C3Hq11", "C3Hq11-C3Hq11", "CHud11-CHud11"
     ]
 
     # MWZ observavle
-    bin_edges_MWZ = [100, 160, 200, 300, 600, 3000]
+    bin_edges_MWZ = [0, 200, 500, 750, 1000, 1500, 100000000000000000]
     mWZ_hist = ObservableHistogram(
-        bin_edges=bin_edges_MWZ, observable=total_phase_space.MWZ
+        bin_edges=bin_edges_MWZ, observable=InvariantMassObs(part_pids=[11, 12, 13, 14])
     )
 
     # Constructs the event analysis
-    event_analysis = EventAnalysis(cuts=[total_phase_space.total_phase_space_cuts])  # no cuts being applied
+    event_analysis = EventAnalysis(cuts=[])  # no cuts being applied
 
     # Performs the loop over the events
     event_loop = EventLoop(file_reader=pylhe.read_lhe, histogram=mWZ_hist)
@@ -114,6 +52,6 @@ if __name__ == "__main__":
         print(histograms_MWZ_efts[eft_term])
         print("---------------------------------------------")
 
-    with open(f"{folderpath}/CMS_WZ_2110_11231_dsig_dmWZ.json", "w") as file_:
+    with open(f"{folderpath}/CMS_WZ_2110_11231_dsig_dMWZ.json", "w") as file_:
         simuations = {term: dist.tolist() for term, dist in histograms_MWZ_efts.items()}
         json.dump(simuations, file_, indent=4)

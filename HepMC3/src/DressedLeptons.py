@@ -36,7 +36,7 @@ class LeptonsDresser:
             dressed_leptons.append(dressed_lepton)
 
         # Returns a list with all the dressed leptons in the event
-        return dressed_leptons
+        return dressed_leptons, photons
 
     def dress_lepton(self, lepton, photons):
         """

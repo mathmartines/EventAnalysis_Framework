@@ -6,7 +6,7 @@ from EventAnalysis_Framework.src.Analysis import EventAnalysis, EventLoop
 from EventAnalysis_Framework.src.Utilities import read_xsection
 from EventAnalysis_Framework.LHCO.src.LHCOReader import read_LHCO
 from EventAnalysis_Framework.LHCO.src.Observables import InvariantMass
-from EventAnalysis_Framework.LHCO.analysis.TGC.CMS_2009_00119 import selection_cuts
+from EventAnalysis_Framework.LHCO.analysis.TGC.CMS_WW_2009_00119 import selection_cuts
 import copy
 import json
 import itertools
@@ -15,16 +15,47 @@ import itertools
 if __name__ == "__main__":
     # Simulated terms
     eft_terms = [
-        f"{coef}{''.join(indices)}" for indices in itertools.product("123", repeat=2) if indices[0] != "3"
-        for coef in ["CLHud", "CRHud"]
+        "C1Hq11-C3Hq11",
+        # C1Hq
+        # "C1Hq11",
+        # "C1Hq22",
+        # "C1Hq33",
+        # "C1Hq11-C1Hq11",
+        # "C1Hq12-C1Hq12",
+        # "C1Hq13-C1Hq13",
+        # "C1Hq22-C1Hq22",
+        # "C1Hq23-C1Hq23",
+        # "C1Hq33-C1Hq33",
+        # C3Hq
+        # "C3Hq11",
+        # "C3Hq22",
+        # "C3Hq33",
+        # "C3Hq11-C3Hq11",
+        # "C3Hq12-C3Hq12",
+        # "C3Hq13-C3Hq13",
+        # "C3Hq22-C3Hq22",
+        # "C3Hq23-C3Hq23",
+        # "C3Hq33-C3Hq33",
+        # CHd
+        # "CHd11",
+        # "CHd22",
+        # "CHd33",
+        # "CHd11-CHd11",
+        # "CHd12-CHd12",
+        # "CHd13-CHd13",
+        # "CHd22-CHd22",
+        # "CHd23-CHd23",
+        # "CHd33-CHd33",
+        # CHu
+        # "CHu11",
+        # "CHu22",
+        # "CHu11-CHu11",
+        # "CHu12-CHu12",
+        # "CHu22-CHu22"
     ]
-    eft_terms.extend([
-        f"{coef}{''.join(indices)}-{coef}{''.join(indices)}"
-        for indices in itertools.product("123", repeat=2) if indices[0] != "3" for coef in ["CLHud", "CRHud"]
-    ])
 
     # Path where the simulations are store
-    folderpath = "/home/martines/work/MG5_aMC_v2_9_23/PhD/TGC/WW/CMS_2009_00119-CC"
+    folderpath = "/home/martines/work/MG5_aMC_v2_9_23/PhD/TGC/WW/CMS_2009_00119"
 
     # Event analysis with all the selection cuts
     event_analysis = EventAnalysis(
@@ -72,7 +103,7 @@ if __name__ == "__main__":
 
     print(histograms_efts)
 
-    with open(f"{folderpath}/CC-CMS_2009_00119.json", "w") as file_:
+    with open(f"{folderpath}/CMS_2009_00119-TEST.json", "w") as file_:
         simulations = {eft_term: dist.tolist() for eft_term, dist in histograms_efts.items()}
         json.dump(simulations, file_, indent=4)
 

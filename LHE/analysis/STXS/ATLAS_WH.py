@@ -22,24 +22,12 @@ def higgs_rapidity_cut(event: pylhe.LHEEvent):
 
 if __name__ == "__main__":
     # Path to the folder where the simulations are stored
-    path_to_folder = "/home/martines/work/MG5_aMC_v2_9_23/PhD/STXS/ATLAS_2410_19611/WH"
+    path_to_folder = "/home/martines/work/MG5_aMC_v2_9_23/PhD/STXS/ATLAS_2410_19611/WH-HL-LHC"
 
     # Simulated terms
-    eft_terms = []
-
-    # C3Hq - hermitian indices
-    for flavor_index in itertools.combinations_with_replacement("123", 2):
-        if flavor_index[0] == "3":
-            continue
-        flavor_index = "".join(flavor_index)
-        eft_terms.extend([f"C3Hq{flavor_index}", f"C3Hq{flavor_index}-C3Hq{flavor_index}"])
-
-    # CHud - non-hermitian indices
-    for flavor_index in itertools.product("123", repeat=2):
-        if flavor_index[0] == "3":
-            continue
-        flavor_index = "".join(flavor_index)
-        eft_terms.extend([f"CHud{flavor_index}", f"CHud{flavor_index}-CHud{flavor_index}"])
+    eft_terms = [
+        "SM", "CHud11", "CHud12", "CHud11-CHud11", "CHud12-CHud12"
+    ]
 
     # Books the histogram
     bin_edges = [75, 150, 250, 400, 600, 1000000000]
@@ -72,6 +60,6 @@ if __name__ == "__main__":
             print(current_hist, xsection)
 
     # Saves the json file
-    with open(f"{path_to_folder}/ATLAS_WH_2410_19611_dsigma_dpTW.json", "w") as file_:
+    with open(f"{path_to_folder}/HL-LHC-ATLAS_WH_2410_19611_dsigma_dpTW.json", "w") as file_:
         eft_hists = {term: dist.tolist() for term, dist in eft_hists.items()}
         json.dump(eft_hists, file_, indent=4)
