@@ -25,43 +25,7 @@ if __name__ == "__main__":
 
     # Simulated terms
     eft_terms = [
-        "C1Hq11-C3Hq11"
-        # C1Hq
-        # "C1Hq11",
-        # "C1Hq22",
-        # "C1Hq33",
-        # "C1Hq11-C1Hq11",
-        # "C1Hq12-C1Hq12",
-        # "C1Hq13-C1Hq13",
-        # "C1Hq22-C1Hq22",
-        # "C1Hq23-C1Hq23",
-        # "C1Hq33-C1Hq33",
-        # C3Hq
-        # "C3Hq11",
-        # "C3Hq22",
-        # "C3Hq33",
-        # "C3Hq11-C3Hq11",
-        # "C3Hq12-C3Hq12",
-        # "C3Hq13-C3Hq13",
-        # "C3Hq22-C3Hq22",
-        # "C3Hq23-C3Hq23",
-        # "C3Hq33-C3Hq33",
-        # CHd
-        # "CHd11",
-        # "CHd22",
-        # "CHd33",
-        # "CHd11-CHd11",
-        # "CHd12-CHd12",
-        # "CHd13-CHd13",
-        # "CHd22-CHd22",
-        # "CHd23-CHd23",
-        # "CHd33-CHd33",
-        # CHu
-        # "CHu11",
-        # "CHu22",
-        # "CHu11-CHu11",
-        # "CHu12-CHu12",
-        # "CHu22-CHu22"
+        "C1Hq11-CHd11", "C1Hq11-CHu11", "C3Hq11-CHd11", "C3Hq11-CHu11"
     ]
 
     # Books the histogram

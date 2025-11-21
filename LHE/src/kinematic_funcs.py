@@ -9,6 +9,16 @@ def build_four_momentum(particle: pylhe.LHEParticle):
     return np.array([getattr(particle, comp) for comp in "e px py pz".split()])
 
 
+def evaluate_total_momentum(event: pylhe.LHEEvent, part_pids: list):
+    """Calculates the total momentum taking into account only the particles with PIDs in the part_pid list."""
+    # Four-momentum
+    momentum = np.array([
+        build_four_momentum(part) for part in event.particles if abs(part.id) in part_pids
+    ])
+    # Total four-momentum of the event
+    return np.sum(momentum, axis=0)
+
+
 def pT(momentum) -> float:
     """Returns the pT of the particle."""
     return np.sqrt(momentum[1]**2 + momentum[2]**2)
@@ -20,6 +30,11 @@ def eta(momentum) -> float:
     p = np.sqrt(np.sum([comp ** 2 for comp in momentum[1:]]))
     # pseudo-rapidity
     return -1 / 2 * np.log((p - momentum[3]) / (p + momentum[3]))
+
+
+def rap(momentum) -> float:
+    """Computes the rapidity of the particle."""
+    return 0.5 * np.log((momentum[0] + momentum[-1]) / (momentum[0] - momentum[-1]))
 
 
 def phi(momentum) -> float:

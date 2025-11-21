@@ -16,13 +16,11 @@ def select_particles(event, pids):
 class LeptonsDresser:
     """Creates the dressed leptons for the event analysis."""
 
-    def __init__(self, leptons_pids: List[int], delta_r: float):
+    def __init__(self, delta_r: float):
         """
-        :param leptons_pids: list with the absolute values of the leptons pids.
         :param delta_r: size of the radius around the leptons that any photon momenta should be added
                         to the lepton momenta.
         """
-        self._leptons_pids = leptons_pids
         self._delta_r = delta_r
 
     def create_dressed_leptons(self, leptons, photons):

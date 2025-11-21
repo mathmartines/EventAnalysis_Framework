@@ -11,17 +11,18 @@ import numpy as np
 
 if __name__ == "__main__":
     # Path to the folder where the .lhe files are stored
-    folderpath = "/home/martines/work/MG5_aMC_v2_9_23/PhD/TGC/WZ/Longitudinal"
+    folderpath = "/home/martines/work/MG5_aMC_v2_9_23/PhD/PolarizationStudy/WH/AllPolarizations"
 
     # Effective terms we need to run the analysis on
     eft_terms = [
-        "SM", "C3Hq11", "C3Hq11-C3Hq11"
+        "SM", "dgWqL11", "dgWqL11-dgWqL11"
     ]
 
     # Invariant mass of the diboson system
-    bin_edges = np.arange(200, 5000, 100)
+    # bin_edges = np.arange(200, 5000, 100)
+    bin_edges = [0, 500, 1000, 1500, 2000, 3000, 4000, 100000000000]
     mvv_dist = ObservableHistogram(
-        bin_edges=bin_edges, observable=InvariantMassObs(part_pids=[24, 23])
+        bin_edges=bin_edges, observable=InvariantMassObs(part_pids=[24, 25])
     )
 
     # Constructs the event analysis
@@ -38,7 +39,7 @@ if __name__ == "__main__":
     # Iterates over the terms we need to run the analysis
     for eft_term in eft_terms:
         # Iterates over the simulated bins
-        for bin_index in range(1, 11):
+        for bin_index in range(1, 8):
             # name of the .lhe file
             file_name = f"{folderpath}/lhe_files/{eft_term}-bin-{bin_index}.lhe"
             # Cross-section
@@ -54,6 +55,6 @@ if __name__ == "__main__":
             ])
             print(nevts)
 
-    with open(f"{folderpath}/pp_to_WLZL.json", "w") as file_:
+    with open(f"{folderpath}/WH-AllPolarizations.json", "w") as file_:
         simuations = {term: dist.tolist() for term, dist in histograms_mvv_efts.items()}
         json.dump(simuations, file_, indent=4)

@@ -22,11 +22,11 @@ def higgs_rapidity_cut(event: pylhe.LHEEvent):
 
 if __name__ == "__main__":
     # Path to the folder where the simulations are stored
-    path_to_folder = "/home/martines/work/MG5_aMC_v2_9_23/PhD/STXS/ATLAS_2410_19611/WH-HL-LHC"
+    path_to_folder = "/home/martines/work/MG5_aMC_v2_9_23/PhD/STXS/ATLAS_2410_19611/WH"
 
     # Simulated terms
     eft_terms = [
-        "SM", "CHud11", "CHud12", "CHud11-CHud11", "CHud12-CHud12"
+        "C3Hq11-CHud11"
     ]
 
     # Books the histogram
@@ -60,6 +60,6 @@ if __name__ == "__main__":
             print(current_hist, xsection)
 
     # Saves the json file
-    with open(f"{path_to_folder}/HL-LHC-ATLAS_WH_2410_19611_dsigma_dpTW.json", "w") as file_:
+    with open(f"{path_to_folder}/ATLAS_WH_2410_19611_dsigma_dpTW.json", "w") as file_:
         eft_hists = {term: dist.tolist() for term, dist in eft_hists.items()}
         json.dump(eft_hists, file_, indent=4)

@@ -25,21 +25,21 @@ if __name__ == "__main__":
     path_to_folder = "/home/martines/work/MG5_aMC_v2_9_23/PhD/STXS/ATLAS_2410_19611/WH"
 
     # Simulated terms
-    eft_terms = []
+    eft_terms = ["C3Hq11-CHud11"]
 
     # C3Hq - hermitian indices
-    for flavor_index in itertools.combinations_with_replacement("123", 2):
-        if flavor_index[0] == "3":
-            continue
-        flavor_index = "".join(flavor_index)
-        eft_terms.extend([f"C3Hq{flavor_index}", f"C3Hq{flavor_index}-C3Hq{flavor_index}"])
-
-    # CHud - non-hermitian indices
-    for flavor_index in itertools.product("123", repeat=2):
-        if flavor_index[0] == "3":
-            continue
-        flavor_index = "".join(flavor_index)
-        eft_terms.extend([f"CHud{flavor_index}", f"CHud{flavor_index}-CHud{flavor_index}"])
+    # for flavor_index in itertools.combinations_with_replacement("123", 2):
+    #     if flavor_index[0] == "3":
+    #         continue
+    #     flavor_index = "".join(flavor_index)
+    #     eft_terms.extend([f"C3Hq{flavor_index}", f"C3Hq{flavor_index}-C3Hq{flavor_index}"])
+    #
+    # # CHud - non-hermitian indices
+    # for flavor_index in itertools.product("123", repeat=2):
+    #     if flavor_index[0] == "3":
+    #         continue
+    #     flavor_index = "".join(flavor_index)
+    #     eft_terms.extend([f"CHud{flavor_index}", f"CHud{flavor_index}-CHud{flavor_index}"])
 
     # Books the histogram
     bin_edges = [150, 250, 400, 1000000000]

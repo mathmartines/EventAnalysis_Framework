@@ -35,6 +35,11 @@ class BinIndexFinder:
         return -1
 
 
+def unweighted_events(event):
+    """No weights for the events."""
+    return 1
+
+
 class ObservableHistogram(Histogram, np.ndarray, BinIndexFinder):
     """
     One-dimensional histogram for a given observable.
@@ -46,7 +51,7 @@ class ObservableHistogram(Histogram, np.ndarray, BinIndexFinder):
     where it takes a single event as the argument.
     """
 
-    def __new__(cls, bin_edges: List[float], observable: Callable):
+    def __new__(cls, bin_edges: List[float], observable: Callable, get_weight: Callable = unweighted_events):
         """
         The two necessary parameters for construction are:
 
@@ -59,10 +64,11 @@ class ObservableHistogram(Histogram, np.ndarray, BinIndexFinder):
         # Store the bin_edges and observable as attributes
         hist.bin_edges = bin_edges
         hist.observable = observable
+        hist.get_weight = get_weight
         # Return the histogram
         return hist
 
-    def __init__(self, bin_edges, observable):
+    def __init__(self, bin_edges: List[float], observable: Callable, get_weight: Callable = unweighted_events):
         BinIndexFinder.__init__(self, bin_edges=bin_edges)
 
     def __array_finalize__(self, hist):
@@ -71,6 +77,7 @@ class ObservableHistogram(Histogram, np.ndarray, BinIndexFinder):
         # Add the attributes
         self.observable = getattr(hist, "observable", None)
         self.bin_edges = getattr(hist, "bin_edges", None)
+        self.get_weight = getattr(hist, "get_weight", None)
 
     def update_hist(self, event):
         """Updates the histogram using the Event object."""
@@ -78,13 +85,53 @@ class ObservableHistogram(Histogram, np.ndarray, BinIndexFinder):
         obs_value = self.observable(event)
         # Find the bin index
         bin_index = self.find_bin_index(observable_value=obs_value)
+        # Get the weight
+        weight = self.get_weight(event)
         # Update the histogram if the observable is inside the histogram limits
         if 0 <= bin_index < len(self):
-            self[bin_index] += 1
+            self[bin_index] += weight
 
     def __copy__(self):
         """Shallow copy of the current histogram."""
-        return self.__new__(self.__class__, bin_edges=self.bin_edges, observable=self.observable)
+        return self.__new__(self.__class__, bin_edges=self.bin_edges, observable=self.observable,
+                            get_weight=self.get_weight)
+
+
+class WeightedHistogramManager(Histogram, BinIndexFinder):
+    """Builds one histogram for each reweighted events."""
+
+    def __init__(self, bin_edges: List[float], observale: Callable, get_weights: Callable, hist_names: List[str]):
+        BinIndexFinder.__init__(self, bin_edges=bin_edges)
+        # Stores the observable needed
+        self.observable = observale
+        # Returns a dictionary with the different weights for the event
+        self.get_weights_func = get_weights
+        # One histogram for which reweighted event
+        self._hists = {hist_name: np.zeros(len(bin_edges) - 1) for hist_name in hist_names}
+
+    def update_hist(self, event):
+        """Updates all the histograms with the current event."""
+        observable_value = self.observable(event)
+        # Check if the value is inside the limits of the histogram
+        bin_index = self.find_bin_index(observable_value=observable_value)
+        if 0 <= bin_index < len(self.bin_edges):
+            # Get the weights for each of the histograms
+            weights = self.get_weights_func(event)
+            # Updates each of the histograms
+            for hist_name, hist in self._hists.items():
+                # In case there's not weight, set it to 1
+                hist[bin_index] += weights[hist_name] if hist_name in weights else 1
+
+    def __getitem__(self, hist_name: str):
+        """Returns the histogram"""
+        if hist_name in self._hists:
+            return self._hists[hist_name]
+        return np.zeros(len(self.bin_edges) - 1)
+
+    def __copy__(self):
+        """Shallow copy of the current hist."""
+        return self.__class__(bin_edges=self.bin_edges, observale=self.observable,
+                              get_weights=self.get_weights_func, hist_names=list(self._hists.keys()))
 
 
 class HistogramCompound(Histogram):
