@@ -1,7 +1,8 @@
 """Functions to read the content of .lhco files"""
 
-from typing import List
+from typing import List, Dict
 from EventAnalysis_Framework.LHCO.src.EventInfo import Event
+from EventAnalysis_Framework.LHE.src.read_lhe import read_lhe
 
 
 def read_LHCO(filename: str) -> List:
@@ -36,3 +37,14 @@ def read_LHCO(filename: str) -> List:
 def read_LHCO_all_events(filaname: str):
     """Returns a list with all the events."""
     return [event for event in read_LHCO(filaname)]
+
+
+def read_LHCO_with_weight(filenames: Dict[str, str]):
+    """Reads the events from the .lhco file and the weights from the .lhe files"""
+    # Reads the lhe file
+    lhe_events = read_lhe(filename=filenames["LHE"])
+
+    # Reads the lhco file
+    for event_lhco, event_lhe in zip(read_LHCO(filename=filenames["LHCO"]), lhe_events):
+        event_lhco.weights = event_lhe.eventinfo.weight
+        yield event_lhco

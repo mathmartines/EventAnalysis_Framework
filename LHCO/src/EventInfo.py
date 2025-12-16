@@ -51,7 +51,7 @@ class Particle:
         """Creates the four-momentum for the particle"""
         particle_mass = 0 if self.typ != 4 else self.jmass
         return MomentumNumpy4D((self.pt, self.phi, self.eta, particle_mass),
-                            dtype=[("pt", float), ("phi", float), ("eta", float), ("mass", float)]).to_pxpypzenergy()
+                               dtype=[("pt", float), ("phi", float), ("eta", float), ("mass", float)]).to_pxpypzenergy()
 
 
 class Event(UserList):
@@ -62,17 +62,19 @@ class Event(UserList):
         "photons": 0, "electrons": 1, "muons": 2, "tauhads": 3, "jets": 4, "met": 6
     }
 
-    def __init__(self, list_particle: List[Particle]):
+    def __init__(self, list_particle: List[Particle], event_weights=None):
         # List with particles sorted by pT
         super().__init__(self._sort_by_pt(list_particle))
+        # Stores the weights of the event
+        self.weights = event_weights
 
     @classmethod
-    def from_str_particles_info(cls, list_particles_info: List[str]):
+    def from_str_particles_info(cls, list_particles_info: List[str], event_weights=None):
         """
         Each entry of list_particles_info stores the information about a particle in the same way as in the .lhco
         file, but without the firt character (contains no information about the particle).
         """
-        return cls([Particle(particle_info) for particle_info in list_particles_info])
+        return cls([Particle(particle_info) for particle_info in list_particles_info], event_weights)
 
     def __getattr__(self, part_type: str) -> List[Particle]:
         """Returns only the particles of a given type."""
@@ -102,3 +104,4 @@ class Event(UserList):
         """Removes the particles of a given type."""
         if parts_type in self.particles_type:
             self.data = [particle for particle in self.data if particle.typ != self.particles_type[parts_type]]
+

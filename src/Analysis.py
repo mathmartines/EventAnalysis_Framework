@@ -2,7 +2,7 @@
     Framework to perform the single event analysis and the iteration over the events.
 """
 
-from typing import List, Callable
+from typing import List, Callable, Union, Dict
 from EventAnalysis_Framework.src.Histogram import Histogram
 import copy
 
@@ -52,7 +52,7 @@ class EventLoop:
         # Template of the histogram that should be build for each analysis
         self._histogram_template = histogram
 
-    def analyse_events(self, filename: str, event_analysis: EventAnalysis):
+    def analyse_events(self, filename: Union[str, Dict[str, str]], event_analysis: EventAnalysis):
         """
         Runs the analysis on events from the .lhe file and returns a histogram
         constructed from the selected events.
